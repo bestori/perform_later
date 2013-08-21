@@ -6,7 +6,7 @@ describe Resque::Plugins::Later::Method do
   
   context "enabled" do
     before(:each) do 
-      PerformLater.config.stub!(:enabled?).and_return(true)
+      PerformLater.config.stub(:enabled?).and_return(true)
       User.later :long_running_method
     end
 
@@ -19,7 +19,7 @@ describe Resque::Plugins::Later::Method do
 
   context "loner" do
     before(:each) do 
-      PerformLater.config.stub!(:enabled?).and_return(true)
+      PerformLater.config.stub(:enabled?).and_return(true)
       User.later :lonely_long_running_method, loner: true
     end
 
@@ -74,14 +74,14 @@ describe Resque::Plugins::Later::Method do
 
   describe :perform_later! do
     it "should send the correct params on the method (with hash)" do
-      PerformLater.config.stub!(:enabled?).and_return(false)
+      PerformLater.config.stub(:enabled?).and_return(false)
        user = User.create
        user.should_receive(:method_with_hash_as_option).with({:some_option => "Brown fox"})
        user.perform_later!(:generic, :method_with_hash_as_option, :some_option => "Brown fox")
     end
 
     it "should send the correct params on the method (with integer)" do
-      PerformLater.config.stub!(:enabled?).and_return(false)
+      PerformLater.config.stub(:enabled?).and_return(false)
        user = User.create
        user.should_receive(:method_with_integer_option).with(1).and_return(1)
        user.perform_later!(:generic, :method_with_integer_option, 1)
@@ -94,7 +94,7 @@ describe Resque::Plugins::Later::Method do
     let(:actual_enqueue) {Time.now + enqueue_in}
 
     before(:each) do
-      PerformLater.config.stub!(:enabled?).and_return(true)    
+      PerformLater.config.stub(:enabled?).and_return(true)    
       User.later :delayed_long_running_method, :delay => enqueue_in
     end
 
